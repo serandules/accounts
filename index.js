@@ -49,15 +49,13 @@ clustor(function () {
         server.listen(0);
 
         agent('/drones', function (err, io) {
-            io.once('connect', function () {
-                io.on('join', function (drone) {
-                    log.info(drone);
-                });
-                io.on('leave', function (drone) {
-                    log.info(drone);
-                });
-                procevent.emit('started');
+            io.on('join', function (drone) {
+                log.info(drone);
             });
+            io.on('leave', function (drone) {
+                log.info(drone);
+            });
+            procevent.emit('started');
         });
     });
 }, function (err, address) {
