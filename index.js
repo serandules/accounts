@@ -19,11 +19,12 @@ clustor(function () {
     auth = auth({
         open: [
             '^(?!\\/apis(\\/|$)).+',
-            '^\/apis\/v\/tokens([\/].*|$)'
+            '^\/apis\/v\/tokens$'
         ],
         hybrid: [
             '^\/apis\/v\/menus\/.*',
-            '^\/apis\/v\/users([\/].*|$)'
+            '^\/apis\/v\/users([\/].*|$)',
+            '^\/apis\/v\/tokens\/.*'
         ]
     });
 
@@ -45,7 +46,7 @@ clustor(function () {
         app.use('/apis/v', require('user-service'));
         app.use('/apis/v', require('client-service'));
         app.use('/apis/v', require('token-service'));
-        app.use('/apis/v', require('./apis/menus'));
+        app.use('/apis/v', require('menu-service'));
 
         //error handling
         //app.use(agent.error);
