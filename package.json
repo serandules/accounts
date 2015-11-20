@@ -15,6 +15,7 @@
         "procevent": "serandules/procevent#master",
         "hub-agent": "serandules/hub-agent#master",
         "auth": "serandules/auth#master",
+        "config-service": "serandules/config-service#master",
         "user-service": "serandules/user-service#master",
         "client-service": "serandules/client-service#master",
         "token-service": "serandules/token-service#master"

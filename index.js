@@ -19,6 +19,7 @@ clustor(function () {
     auth = auth({
         open: [
             '^(?!\\/apis(\\/|$)).+',
+            '^\/apis\/v\/configs\/boot$',
             '^\/apis\/v\/tokens$'
         ],
         hybrid: [
@@ -43,6 +44,7 @@ clustor(function () {
 
         app.use(bodyParser.json());
 
+        app.use('/apis/v', require('config-service'));
         app.use('/apis/v', require('user-service'));
         app.use('/apis/v', require('client-service'));
         app.use('/apis/v', require('token-service'));
