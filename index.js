@@ -11,6 +11,7 @@ clustor(function () {
     var agent = require('hub-agent');
     var procevent = require('procevent')(process);
     var auth = require('auth');
+    var serandi = require('serandi');
 
     var mongourl = 'mongodb://localhost/serandives';
 
@@ -36,6 +37,7 @@ clustor(function () {
     db.once('open', function callback() {
         log.debug('connected to mongodb : ' + mongourl);
 
+        app.use(serandi.ctx)
         app.use(auth);
 
         app.use(bodyParser.urlencoded({
