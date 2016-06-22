@@ -1,78 +1,62 @@
 var log = require('logger')('accounts-services');
-var clustor = require('clustor');
+var nconf = require('nconf').argv().env();
+var http = require('http');
+var mongoose = require('mongoose');
+var express = require('express');
+var bodyParser = require('body-parser');
+var auth = require('auth');
+var serandi = require('serandi');
 
-var self = 'accounts.serandives.com';
+var mongourl = nconf.get('MONGODB_URI');
 
-clustor(function () {
-    var http = require('http');
-    var mongoose = require('mongoose');
-    var express = require('express');
-    var bodyParser = require('body-parser');
-    var agent = require('hub-agent');
-    var procevent = require('procevent')(process);
-    var auth = require('auth');
-    var serandi = require('serandi');
+var app = express();
 
-    var mongourl = 'mongodb://localhost/serandives';
+auth = auth({
+    open: [
+        '^(?!\\/apis(\\/|$)).+',
+        '^\/apis\/v\/configs\/boot$',
+        '^\/apis\/v\/tokens$'
+    ],
+    hybrid: [
+        '^\/apis\/v\/menus\/.*',
+        '^\/apis\/v\/users([\/].*|$)',
+        '^\/apis\/v\/tokens\/.*'
+    ]
+});
 
-    var app = express();
+mongoose.connect(mongourl);
 
-    auth = auth({
-        open: [
-            '^(?!\\/apis(\\/|$)).+',
-            '^\/apis\/v\/configs\/boot$',
-            '^\/apis\/v\/tokens$'
-        ],
-        hybrid: [
-            '^\/apis\/v\/menus\/.*',
-            '^\/apis\/v\/users([\/].*|$)',
-            '^\/apis\/v\/tokens\/.*'
-        ]
-    });
+var db = mongoose.connection;
+db.on('error', function (err) {
+    log.error(err);
+});
+db.once('open', function () {
+    log.info('connected to mongodb');
 
-    mongoose.connect(mongourl);
+    app.use(serandi.ctx)
+    app.use(auth);
 
-    var db = mongoose.connection;
-    db.on('error', console.error.bind(console, 'connection error:'));
-    db.once('open', function callback() {
-        log.debug('connected to mongodb : ' + mongourl);
+    app.use(bodyParser.urlencoded({
+        extended: true
+    }));
 
-        app.use(serandi.ctx)
-        app.use(auth);
+    app.use(bodyParser.json());
 
-        app.use(bodyParser.urlencoded({
-            extended: true
-        }));
+    app.use('/apis/v', require('config-service'));
+    app.use('/apis/v', require('user-service'));
+    app.use('/apis/v', require('client-service'));
+    app.use('/apis/v', require('token-service'));
+    app.use('/apis/v', require('menu-service'));
 
-        app.use(bodyParser.json());
+    //error handling
+    //app.use(agent.error);
 
-        app.use('/apis/v', require('config-service'));
-        app.use('/apis/v', require('user-service'));
-        app.use('/apis/v', require('client-service'));
-        app.use('/apis/v', require('token-service'));
-        app.use('/apis/v', require('menu-service'));
-
-        //error handling
-        //app.use(agent.error);
-
-        var server = http.createServer(app);
-        server.listen(0);
-
-        agent('/drones', function (err, io) {
-            io.on('join', function (drone) {
-                log.info(drone);
-            });
-            io.on('leave', function (drone) {
-                log.info(drone);
-            });
-            procevent.emit('started');
-        });
-    });
-}, function (err, address) {
-    log.info('drone started | domain:%s, address:%s, port:%s', self, address.address, address.port);
+    var server = http.createServer(app);
+    server.listen(0);
 });
 
 process.on('uncaughtException', function (err) {
     log.debug('unhandled exception ' + err);
     log.debug(err.stack);
+    process.exit(1);
 });
