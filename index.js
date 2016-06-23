@@ -52,7 +52,7 @@ db.once('open', function () {
     //app.use(agent.error);
 
     var server = http.createServer(app);
-    server.listen(0);
+    server.listen(nconf.get('PORT'));
 });
 
 process.on('uncaughtException', function (err) {
