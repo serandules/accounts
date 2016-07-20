@@ -84,7 +84,7 @@ db.once('open', function () {
         app.all('*', function (req, res) {
             //TODO: check caching headers
             var context = {
-                release: version
+                version: version
             };
             //TODO: check caching headers
             dust.render('index', context, function (err, index) {
