@@ -15,7 +15,7 @@
         "logger": "serandules/logger#master",
         "clustor": "serandules/clustor#master",
         "auth": "serandules/auth#master",
-        "utils": "serandules/utils#master",
+        "serand": "serandules/serand#master",
         "serandi": "serandules/serandi#master",
         "config-service": "serandules/config-service#master",
         "user-service": "serandules/user-service#master",

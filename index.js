@@ -6,7 +6,7 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var auth = require('auth');
 var serandi = require('serandi');
-var utils = require('utils');
+var serand = require('serand');
 var dust = require('dustjs-linkedin');
 
 var mongourl = nconf.get('MONGODB_URI');
@@ -38,7 +38,7 @@ db.on('error', function (err) {
 db.once('open', function () {
     log.info('connected to mongodb');
 
-    utils.index(clientId, clientRevision, function (err, index) {
+    serand.index(clientId, clientRevision, function (err, index) {
         if (err) {
             throw err;
         }
