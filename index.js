@@ -11,8 +11,8 @@ var dust = require('dustjs-linkedin');
 
 var mongourl = nconf.get('MONGODB_URI');
 
-var clientId = 'accounts';
-var clientRevision = nconf.get('CLIENT_REVISION');
+var client = 'accounts';
+var version = nconf.get('CLIENT_VERSION');
 
 var app = express();
 
@@ -38,7 +38,7 @@ db.on('error', function (err) {
 db.once('open', function () {
     log.info('connected to mongodb');
 
-    serand.index(clientId, clientRevision, function (err, index) {
+    serand.index(client, version, function (err, index) {
         if (err) {
             throw err;
         }
@@ -63,6 +63,7 @@ db.once('open', function () {
         //index page with embedded oauth tokens
         app.all('/auth/oauth', function (req, res) {
             var context = {
+                version: version,
                 code: req.body.code || req.query.code,
                 error: req.body.error || req.query.error,
                 errorCode: req.body.error_code || req.query.error_code
@@ -82,7 +83,20 @@ db.once('open', function () {
         //index page
         app.all('*', function (req, res) {
             //TODO: check caching headers
-            res.set('Content-Type', 'text/html').status(200).send(index);
+            var context = {
+                release: version
+            };
+            //TODO: check caching headers
+            dust.render('index', context, function (err, index) {
+                if (err) {
+                    log.error(err);
+                    res.status(500).send({
+                        error: 'error rendering requested page'
+                    });
+                    return;
+                }
+                res.set('Content-Type', 'text/html').status(200).send(index);
+            });
         });
 
         //error handling
