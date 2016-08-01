@@ -1,5 +1,5 @@
 var log = require('logger')('accounts-services');
-var nconf = require('nconf').argv().env();
+var nconf = require('nconf');
 var mongoose = require('mongoose');
 var express = require('express');
 var bodyParser = require('body-parser');
