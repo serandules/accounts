@@ -1,6 +1,5 @@
 var log = require('logger')('accounts-services');
 var nconf = require('nconf').argv().env();
-var http = require('http');
 var mongoose = require('mongoose');
 var express = require('express');
 var bodyParser = require('body-parser');
@@ -9,10 +8,8 @@ var serandi = require('serandi');
 var serand = require('serand');
 var dust = require('dustjs-linkedin');
 
-var mongourl = nconf.get('MONGODB_URI');
-
 var client = 'accounts';
-var version = nconf.get('CLIENT_VERSION');
+var version = nconf.get('ACCOUNTS_CLIENT');
 
 var app = express();
 
@@ -29,15 +26,7 @@ auth = auth({
     ]
 });
 
-mongoose.connect(mongourl);
-
-var db = mongoose.connection;
-db.on('error', function (err) {
-    log.error(err);
-});
-db.once('open', function () {
-    log.info('connected to mongodb');
-
+module.exports = function (done) {
     serand.index(client, version, function (err, index) {
         if (err) {
             throw err;
@@ -45,7 +34,7 @@ db.once('open', function () {
 
         dust.loadSource(dust.compile(index, 'index'));
 
-        app.use(serandi.ctx)
+        app.use(serandi.ctx);
         app.use(auth);
 
         app.use(bodyParser.urlencoded({
@@ -101,14 +90,6 @@ db.once('open', function () {
 
         //error handling
         //app.use(agent.error);
-
-        var server = http.createServer(app);
-        server.listen(nconf.get('PORT'));
+        done(null, app)
     });
-});
-
-process.on('uncaughtException', function (err) {
-    log.debug('unhandled exception ' + err);
-    log.debug(err.stack);
-    process.exit(1);
-});
+};
