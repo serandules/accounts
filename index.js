@@ -90,6 +90,6 @@ module.exports = function (done) {
 
         //error handling
         //app.use(agent.error);
-        done(null, app)
+        done(null, app);
     });
 };
