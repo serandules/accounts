@@ -1,4 +1,4 @@
-var log = require('logger')('accounts-services');
+var log = require('logger')('accounts');
 var nconf = require('nconf');
 var mongoose = require('mongoose');
 var express = require('express');
