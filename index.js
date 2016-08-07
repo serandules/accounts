@@ -32,7 +32,7 @@ module.exports = function (done) {
             throw err;
         }
 
-        dust.loadSource(dust.compile(index, 'index'));
+        dust.loadSource(dust.compile(index, client));
 
         app.use(serandi.ctx);
         app.use(auth);
@@ -76,7 +76,7 @@ module.exports = function (done) {
                 version: version
             };
             //TODO: check caching headers
-            dust.render('index', context, function (err, index) {
+            dust.render(client, context, function (err, index) {
                 if (err) {
                     log.error(err);
                     res.status(500).send({
