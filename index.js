@@ -9,7 +9,7 @@ var serand = require('serand');
 var dust = require('dustjs-linkedin');
 
 var client = 'accounts';
-var version = nconf.get('ACCOUNTS_CLIENT');
+var version = nconf.get('CLIENT_ACCOUNTS');
 
 var app = express();
 
