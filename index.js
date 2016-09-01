@@ -10,6 +10,7 @@ var dust = require('dustjs-linkedin');
 
 var client = 'accounts';
 var version = nconf.get('CLIENT_ACCOUNTS');
+var cdn = nconf.get('CDN');
 
 var app = express();
 
@@ -53,6 +54,7 @@ module.exports = function (done) {
         app.all('/auth/oauth', function (req, res) {
             var context = {
                 version: version,
+                cdn: cdn,
                 code: req.body.code || req.query.code,
                 error: req.body.error || req.query.error,
                 errorCode: req.body.error_code || req.query.error_code
@@ -73,7 +75,8 @@ module.exports = function (done) {
         app.all('*', function (req, res) {
             //TODO: check caching headers
             var context = {
-                version: version
+                version: version,
+                cdn: cdn
             };
             //TODO: check caching headers
             dust.render(client, context, function (err, index) {
