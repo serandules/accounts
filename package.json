@@ -14,6 +14,7 @@
         "dustjs-linkedin": "2.7.*",
         "logger": "serandules/logger#master",
         "clustor": "serandules/clustor#master",
+        "locate": "serandules/locate#master",
         "auth": "serandules/auth#master",
         "serand": "serandules/serand#master",
         "serandi": "serandules/serandi#master",
