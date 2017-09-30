@@ -6,9 +6,9 @@ var dust = require('dustjs-linkedin');
 var errors = require('errors');
 
 var domain = 'accounts';
-var version = nconf.get('clients')[domain];
-var server = nconf.get('server');
-var cdn = nconf.get('cdn');
+var version = nconf.get('CLIENT_' + domain.toUpperCase());
+var server = nconf.get('SERVER');
+var cdn = nconf.get('CDN');
 
 module.exports = function (router) {
     router.use(bodyParser.urlencoded({extended: true}));
