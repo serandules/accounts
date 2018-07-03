@@ -9,7 +9,7 @@
     "dependencies": {
         "nconf": "0.8.4",
         "express": "4.*",
-        "mongoose": "5.*",
+        "mongoose": "5.1.8",
         "body-parser": "1.*",
         "dustjs-linkedin": "2.7.*",
         "logger": "serandules/logger#master",
