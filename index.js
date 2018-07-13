@@ -4,10 +4,11 @@ var bodyParser = require('body-parser');
 var serand = require('serand');
 var dust = require('dustjs-linkedin');
 var errors = require('errors');
+var utils = require('utils');
 
 var domain = 'accounts';
 var version = nconf.get('INDEX_' + domain.toUpperCase());
-var server = nconf.get('SERVER');
+var server = utils.serverUrl();
 var cdn = nconf.get('CDN');
 
 module.exports = function (router) {
