@@ -10,6 +10,7 @@ var domain = 'accounts';
 var version = nconf.get('INDEX_' + domain.toUpperCase());
 var server = utils.serverUrl();
 var cdn = nconf.get('CDN');
+var captchaKey = nconf.get('CAPTCHA_KEY');
 
 module.exports = function (router) {
     router.use(bodyParser.urlencoded({extended: true}));
@@ -24,6 +25,7 @@ module.exports = function (router) {
             var context = {
                 server: server,
                 cdn: cdn,
+                captchaKey: captchaKey,
                 version: version,
                 code: req.body.code || req.query.code,
                 error: req.body.error || req.query.error,
@@ -44,6 +46,7 @@ module.exports = function (router) {
             var context = {
                 server: server,
                 cdn: cdn,
+                captchaKey: captchaKey,
                 version: version
             };
             //TODO: check caching headers
