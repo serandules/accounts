@@ -21,6 +21,25 @@ module.exports = function (router) {
         }
         dust.loadSource(dust.compile(index, domain));
         //index page with embedded oauth tokens
+        router.all('/auth', function (req, res) {
+            var context = {
+                server: server,
+                cdn: cdn,
+                captchaKey: captchaKey,
+                version: version,
+                code: req.body.code || req.query.code,
+                error: req.body.error || req.query.error,
+                errorCode: req.body.error_code || req.query.error_code
+            };
+            //TODO: check caching headers
+            dust.render(domain, context, function (err, index) {
+                if (err) {
+                    log.error('dust:render', err);
+                    return res.pond(errors.serverError());
+                }
+                res.set('Content-Type', 'text/html').status(200).send(index);
+            });
+        });
         router.all('/auth/oauth', function (req, res) {
             var context = {
                 server: server,
