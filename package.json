@@ -16,6 +16,7 @@
         "utils": "serandules/utils#master",
         "clustor": "serandules/clustor#master",
         "locate": "serandules/locate#master",
+        "serandi": "serandules/serandi#master",
         "auth": "serandules/auth#master",
         "serand": "serandules/serand#master",
         "serandi": "serandules/serandi#master",
