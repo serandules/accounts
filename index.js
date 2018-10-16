@@ -12,6 +12,7 @@ var version = nconf.get('INDEX_' + domain.toUpperCase());
 var server = utils.serverUrl();
 var cdn = nconf.get('CDN');
 var captchaKey = nconf.get('CAPTCHA_KEY');
+var googleKey = nconf.get('GOOGLE_KEY');
 
 module.exports = function (router) {
     router.use(bodyParser.urlencoded({extended: true}));
@@ -28,6 +29,7 @@ module.exports = function (router) {
                 cdn: cdn,
                 captchaKey: captchaKey,
                 version: version,
+                googleKey: googleKey,
                 code: req.body.code || req.query.code,
                 error: req.body.error || req.query.error,
                 errorCode: req.body.error_code || req.query.error_code
@@ -47,6 +49,7 @@ module.exports = function (router) {
                 cdn: cdn,
                 captchaKey: captchaKey,
                 version: version,
+                googleKey: googleKey,
                 code: req.body.code || req.query.code,
                 error: req.body.error || req.query.error,
                 errorCode: req.body.error_code || req.query.error_code
@@ -68,7 +71,8 @@ module.exports = function (router) {
                 server: server,
                 cdn: cdn,
                 captchaKey: captchaKey,
-                version: version
+                version: version,
+                googleKey: googleKey
             };
             //TODO: check caching headers
             dust.render(domain, context, function (err, index) {
