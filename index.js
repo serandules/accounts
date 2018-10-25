@@ -14,10 +14,11 @@ var cdn = nconf.get('CDN');
 var captchaKey = nconf.get('CAPTCHA_KEY');
 var googleKey = nconf.get('GOOGLE_KEY');
 
-module.exports = function (router) {
+module.exports = function (ctx) {
+    var router = ctx.router;
     router.use(bodyParser.urlencoded({extended: true}));
 
-    serand.index(domain, version, function (err, index) {
+    serand.index(domain, version, function (err, boot, index) {
         if (err) {
             throw err;
         }
@@ -27,6 +28,7 @@ module.exports = function (router) {
             var context = {
                 server: server,
                 cdn: cdn,
+                boot: boot,
                 captchaKey: captchaKey,
                 version: version,
                 googleKey: googleKey,
@@ -47,6 +49,7 @@ module.exports = function (router) {
             var context = {
                 server: server,
                 cdn: cdn,
+                boot: boot,
                 captchaKey: captchaKey,
                 version: version,
                 googleKey: googleKey,
@@ -70,6 +73,7 @@ module.exports = function (router) {
             var context = {
                 server: server,
                 cdn: cdn,
+                boot: boot,
                 captchaKey: captchaKey,
                 version: version,
                 googleKey: googleKey
