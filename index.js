@@ -11,7 +11,7 @@ var serandi = require('serandi');
 var domain = 'accounts';
 var version = nconf.get('INDEX_' + domain.toUpperCase());
 var server = utils.serverUrl();
-var cdn = nconf.get('CDN');
+var cdn = nconf.get('CDN_STATICS');
 var captchaKey = nconf.get('CAPTCHA_KEY');
 var googleKey = nconf.get('GOOGLE_KEY');
 
