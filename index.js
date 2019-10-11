@@ -17,6 +17,16 @@ var captchaKey = nconf.get('CAPTCHA_KEY');
 var googleKey = nconf.get('GOOGLE_KEY');
 var adsense = nconf.get('GOOGLE_ADSENSE');
 
+var boots = function (req, res, next) {
+  serand.boots([], function (err, configs) {
+    if (err) {
+      return next(err);
+    }
+    req.configs = configs;
+    next();
+  });
+};
+
 module.exports = function (router, done) {
 
   router.use(bodyParser.urlencoded({extended: true}));
@@ -26,81 +36,72 @@ module.exports = function (router, done) {
       return done(err);
     }
     dust.loadSource(dust.compile(index, domain));
-    serand.configs(['boot', 'groups'], function (err, configs) {
-      if (err) {
-        return done(err);
-      }
-      //index page with embedded oauth tokens
-      router.all('/auth', function (req, res) {
-        var context = {
-          cdn: cdn,
-          version: version,
-          googleKey: googleKey,
-          server: server,
-          subdomain: subdomain,
-          configs: configs,
-          captchaKey: captchaKey,
-          code: req.body.code || req.query.code,
-          error: req.body.error || req.query.error,
-          errorCode: req.body.error_code || req.query.error_code
-        };
-        //TODO: check caching headers
-        dust.render(domain, context, function (err, index) {
-          if (err) {
-            log.error('dust:render', err);
-            return res.pond(errors.serverError());
-          }
-          res.set('Content-Type', 'text/html').status(200).send(index);
-        });
+    //index page with embedded oauth tokens
+    router.all('/auth', boots, function (req, res) {
+      var context = {
+        cdn: cdn,
+        version: version,
+        googleKey: googleKey,
+        server: server,
+        subdomain: subdomain,
+        configs: req.configs,
+        captchaKey: captchaKey,
+        code: req.body.code || req.query.code,
+        error: req.body.error || req.query.error,
+        errorCode: req.body.error_code || req.query.error_code
+      };
+      dust.render(domain, context, function (err, index) {
+        if (err) {
+          log.error('dust:render', err);
+          return res.pond(errors.serverError());
+        }
+        res.set('Content-Type', 'text/html').status(200).send(index);
       });
-      router.all('/auth/oauth', function (req, res) {
-        var context = {
-          cdn: cdn,
-          version: version,
-          adsense: adsense,
-          googleKey: googleKey,
-          server: server,
-          subdomain: subdomain,
-          configs: configs,
-          captchaKey: captchaKey,
-          code: req.body.code || req.query.code,
-          error: req.body.error || req.query.error,
-          errorCode: req.body.error_code || req.query.error_code
-        };
-        //TODO: check caching headers
-        dust.render(domain, context, function (err, index) {
-          if (err) {
-            log.error('dust:render', err);
-            return res.pond(errors.serverError());
-          }
-          res.set('Content-Type', 'text/html').status(200).send(index);
-        });
-      });
-      router.use('/apis/*', serandi.notFound);
-      //index page
-      router.all('*', function (req, res) {
-        //TODO: check caching headers
-        var context = {
-          cdn: cdn,
-          version: version,
-          adsense: adsense,
-          googleKey: googleKey,
-          server: server,
-          subdomain: subdomain,
-          configs: configs,
-          captchaKey: captchaKey
-        };
-        //TODO: check caching headers
-        dust.render(domain, context, function (err, index) {
-          if (err) {
-            log.error('dust:render', err);
-            return res.pond(errors.serverError());
-          }
-          res.set('Content-Type', 'text/html').status(200).send(index);
-        });
-      });
-
-      done();
     });
+    router.all('/auth/oauth', boots, function (req, res) {
+      var context = {
+        cdn: cdn,
+        version: version,
+        adsense: adsense,
+        googleKey: googleKey,
+        server: server,
+        subdomain: subdomain,
+        configs: req.configs,
+        captchaKey: captchaKey,
+        code: req.body.code || req.query.code,
+        error: req.body.error || req.query.error,
+        errorCode: req.body.error_code || req.query.error_code
+      };
+      dust.render(domain, context, function (err, index) {
+        if (err) {
+          log.error('dust:render', err);
+          return res.pond(errors.serverError());
+        }
+        res.set('Content-Type', 'text/html').status(200).send(index);
+      });
+    });
+    router.use('/apis/*', serandi.notFound);
+    //index page
+    router.all('*', boots, function (req, res) {
+      var context = {
+        cdn: cdn,
+        version: version,
+        adsense: adsense,
+        googleKey: googleKey,
+        server: server,
+        subdomain: subdomain,
+        configs: req.configs,
+        captchaKey: captchaKey
+      };
+      dust.render(domain, context, function (err, index) {
+        if (err) {
+          log.error('dust:render', err);
+          return res.pond(errors.serverError());
+        }
+        res.set('Content-Type', 'text/html').status(200).send(index);
+      });
+    });
+
+    done();
   });
 };
