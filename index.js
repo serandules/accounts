@@ -5,12 +5,12 @@ var serand = require('serand');
 var dust = require('dustjs-linkedin');
 
 var errors = require('errors');
-var utils = require('utils');
+var sera = require('sera');
 var serandi = require('serandi');
 
 var domain = 'accounts';
 var version = nconf.get('INDEX_' + domain.toUpperCase());
-var server = utils.serverUrl();
+var server = sera.serverUrl();
 var cdn = nconf.get('CDN_STATICS');
 var captchaKey = nconf.get('CAPTCHA_KEY');
 var googleKey = nconf.get('GOOGLE_KEY');

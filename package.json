@@ -13,17 +13,11 @@
         "body-parser": "1.*",
         "dustjs-linkedin": "2.7.*",
         "logger": "serandules/logger#master",
-        "utils": "serandules/utils#master",
         "locate": "serandules/locate#master",
-        "serandi": "serandules/serandi#master",
+        "sera": "serandules/sera#master",
         "auth": "serandules/auth#master",
         "serand": "serandules/serand#master",
-        "serandi": "serandules/serandi#master",
-        "config-service": "serandules/config-service#master",
-        "user-service": "serandules/user-service#master",
-        "client-service": "serandules/client-service#master",
-        "token-service": "serandules/token-service#master",
-        "menu-service": "serandules/menu-service#master"
+        "serandi": "serandules/serandi#master"
     },
     "repository": {
         "type": "git",
